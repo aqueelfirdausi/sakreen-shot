@@ -2,13 +2,14 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.serialization)
+  alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = "com.example.sakreenshot"
+    namespace = "com.sakreenshot.app"
     compileSdk = 36
     defaultConfig {
-        applicationId = "com.example.sakreenshot"
+        applicationId = "com.sakreenshot.app"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -81,4 +82,30 @@ dependencies {
   implementation(libs.androidx.navigation3.ui)
   implementation(libs.androidx.navigation3.runtime)
   implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+  implementation(libs.androidx.navigation.compose)
+
+  // Room
+  implementation(libs.androidx.room.runtime)
+  implementation(libs.androidx.room.ktx)
+  ksp(libs.androidx.room.compiler)
+
+  // WorkManager
+  implementation(libs.androidx.work.runtime.ktx)
+
+  // ML Kit Text Recognition
+  implementation(libs.mlkit.text.recognition)
+    implementation(libs.coroutines.play.services)
+
+  // Coil
+  implementation(libs.coil.compose)
+    implementation(libs.androidx.compose.material.icons.extended)
+
+  // DataStore
+  implementation(libs.androidx.datastore.preferences)
 }
+
+
+
+
+
+

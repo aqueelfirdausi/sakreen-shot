@@ -1,4 +1,11 @@
 [versions]
+ksp = "2.2.10-2.0.2"
+room = "2.7.0-rc03"
+work = "2.9.0"
+mlkit = "16.0.1"
+coil = "3.0.4"
+navigation = "2.8.5"
+datastore = "1.1.1"
 androidGradlePlugin = "9.0.1"
 androidxCore = "1.18.0"
 androidxLifecycle = "2.10.0"
@@ -10,11 +17,21 @@ androidxTestRunner = "1.7.0"
 androidxTestEspresso = "3.7.0"
 coroutines = "1.10.2"
 junit = "4.13.2"
-kotlin = "2.3.20"
+kotlin = "2.2.10"
 nav3Core = "1.0.1"
 lifecycleViewmodelNav3 = "2.10.0"
 
 [libraries]
+androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version = "1.8.0" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
+mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "mlkit" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
@@ -38,6 +55,16 @@ androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", vers
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 
 [plugins]
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+
+
+
+
+
+
+
+
