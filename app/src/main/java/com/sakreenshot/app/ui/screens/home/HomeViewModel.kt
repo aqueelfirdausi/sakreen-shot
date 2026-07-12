@@ -25,6 +25,13 @@ class HomeViewModel(private val repository: DataRepository) : ViewModel() {
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
+    val pinnedScreenshots: StateFlow<List<ScreenshotEntity>> = repository.observePinned()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 }
 
 class HomeViewModelFactory(private val repository: DataRepository) : ViewModelProvider.Factory {

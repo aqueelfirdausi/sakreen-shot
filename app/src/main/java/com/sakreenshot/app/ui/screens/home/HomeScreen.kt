@@ -6,6 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items as lazyRowItems
@@ -49,7 +51,9 @@ fun HomeScreen(
     val viewModel: HomeViewModel = viewModel(factory = HomeViewModelFactory(app.repository))
     val screenshots by viewModel.screenshots.collectAsState()
     val categoryCounts by viewModel.categoryCounts.collectAsState()
+    val pinnedScreenshots by viewModel.pinnedScreenshots.collectAsState()
 
+    var selectedCategory by remember { mutableStateOf<String?>(null) }
     var showPermissionUI by remember { mutableStateOf(true) }
     var permissionGranted by remember { mutableStateOf(false) }
 
@@ -77,6 +81,9 @@ fun HomeScreen(
                     }
                     TextButton(onClick = onNavigateToCleanup) {
                         Text("Clean", color = TextPrimary)
+                    }
+                    IconButton(onClick = onNavigateToSettings) {
+                        Icon(Icons.Filled.Settings, contentDescription = "Settings", tint = TextPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -124,23 +131,69 @@ fun HomeScreen(
                         ) {
                             lazyRowItems(categoryCounts) { count ->
                                 Surface(
-                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                    color = if (selectedCategory == count.primaryCategory) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                                     shape = RoundedCornerShape(16.dp),
-                                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                                    modifier = Modifier.clickable { selectedCategory = count.primaryCategory }
                                 ) {
                                     Text(
                                         text = "${count.primaryCategory} (${count.count})",
                                         style = MaterialTheme.typography.labelLarge,
-                                        color = MaterialTheme.colorScheme.primary,
+                                        color = if (selectedCategory == count.primaryCategory) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                     )
+                                }
+                            }
+                            item {
+                                if (selectedCategory != null) {
+                                    Surface(
+                                        color = MaterialTheme.colorScheme.errorContainer,
+                                        shape = RoundedCornerShape(16.dp),
+                                        modifier = Modifier.clickable { selectedCategory = null }
+                                    ) {
+                                        Text(
+                                            text = "Clear Filter",
+                                            style = MaterialTheme.typography.labelLarge,
+                                            color = MaterialTheme.colorScheme.onErrorContainer,
+                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
 
-                items(screenshots, key = { it.id }) { item ->
+                val filteredPinned = pinnedScreenshots.filter { selectedCategory == null || it.primaryCategory == selectedCategory }
+                val filteredRecent = screenshots.filter { !it.isPinned && (selectedCategory == null || it.primaryCategory == selectedCategory) }
+
+                if (filteredPinned.isNotEmpty()) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Text(
+                            text = "Pinned",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                        )
+                    }
+                    items(filteredPinned, key = { "pinned_${it.id}" }) { item ->
+                        ScreenshotCard(item, onClick = { onNavigateToDetail(item.id) })
+                    }
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
+
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Text(
+                        text = "Recent",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+                
+                items(filteredRecent, key = { "recent_${it.id}" }) { item ->
                     ScreenshotCard(item, onClick = { onNavigateToDetail(item.id) })
                 }
             }
