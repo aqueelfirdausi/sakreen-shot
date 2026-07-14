@@ -3,7 +3,10 @@ package com.sakreenshot.app.data.db
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "screenshots")
+@Entity(
+    tableName = "screenshots",
+    indices = [androidx.room.Index(value = ["mediaStoreId"], unique = true)]
+)
 data class ScreenshotEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val contentUri: String,

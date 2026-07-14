@@ -28,6 +28,31 @@ class ProcessItemWorker(
 
         val database = AppDatabase.getDatabase(appContext)
         val dao = database.screenshotDao()
+
+        if (runAttemptCount > 3) {
+            val failedEntity = ScreenshotEntity(
+                contentUri = uriString,
+                mediaStoreId = mediaStoreId,
+                displayName = displayName,
+                relativePath = relativePath,
+                extractedText = "",
+                normalizedText = "",
+                primaryCategory = "UNSORTED", // fallback
+                classificationScore = 0,
+                capturedAt = dateAdded,
+                indexedAt = System.currentTimeMillis(),
+                modifiedAt = System.currentTimeMillis(),
+                width = width,
+                height = height,
+                fileSize = fileSize,
+                isPinned = false,
+                estimatedExpiry = null,
+                processingStatus = "FAILED_OCR",
+                contentHash = null
+            )
+            dao.insertOrUpdate(failedEntity)
+            return Result.failure()
+        }
         val textExtractor = TextExtractor(appContext)
         val textClassifier = TextClassifier()
 

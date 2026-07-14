@@ -23,6 +23,7 @@ class SakreenShotApplication : Application() {
         }
 
         if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
+            WorkManagerHelper.scheduleSync(this)
             WorkManagerHelper.scheduleObserver(this)
         }
     }

@@ -79,6 +79,17 @@ fun SettingsScreen(onBack: () -> Unit) {
                 ) {
                     Text("Retry Failed Items")
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Background Import",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = "Android may occasionally delay automatic screenshot detection to save battery. Any missed screenshots will be imported automatically the next time you open the app.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextSecondary
+                )
             }
 
             HorizontalDivider()

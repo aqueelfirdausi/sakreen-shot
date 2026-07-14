@@ -130,33 +130,39 @@ fun HomeScreen(
                             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                         ) {
                             lazyRowItems(categoryCounts) { count ->
-                                Surface(
-                                    color = if (selectedCategory == count.primaryCategory) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                                    shape = RoundedCornerShape(16.dp),
-                                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                                    modifier = Modifier.clickable { selectedCategory = count.primaryCategory }
-                                ) {
-                                    Text(
-                                        text = "${count.primaryCategory} (${count.count})",
-                                        style = MaterialTheme.typography.labelLarge,
-                                        color = if (selectedCategory == count.primaryCategory) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                    )
+                                    Surface(
+                                        color = if (selectedCategory == count.primaryCategory) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                        shape = RoundedCornerShape(16.dp),
+                                        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                                        modifier = Modifier.clickable(
+                                            role = androidx.compose.ui.semantics.Role.Button,
+                                            onClick = { selectedCategory = count.primaryCategory }
+                                        )
+                                    ) {
+                                        Text(
+                                            text = "${count.primaryCategory} (${count.count})",
+                                            style = MaterialTheme.typography.labelLarge,
+                                            color = if (selectedCategory == count.primaryCategory) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                        )
                                 }
                             }
                             item {
                                 if (selectedCategory != null) {
-                                    Surface(
-                                        color = MaterialTheme.colorScheme.errorContainer,
-                                        shape = RoundedCornerShape(16.dp),
-                                        modifier = Modifier.clickable { selectedCategory = null }
-                                    ) {
-                                        Text(
-                                            text = "Clear Filter",
-                                            style = MaterialTheme.typography.labelLarge,
-                                            color = MaterialTheme.colorScheme.onErrorContainer,
-                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                        )
+                                        Surface(
+                                            color = MaterialTheme.colorScheme.errorContainer,
+                                            shape = RoundedCornerShape(16.dp),
+                                            modifier = Modifier.clickable(
+                                                role = androidx.compose.ui.semantics.Role.Button,
+                                                onClick = { selectedCategory = null }
+                                            )
+                                        ) {
+                                            Text(
+                                                text = "Clear Filter",
+                                                style = MaterialTheme.typography.labelLarge,
+                                                color = MaterialTheme.colorScheme.onErrorContainer,
+                                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                            )
                                     }
                                 }
                             }
@@ -209,7 +215,10 @@ fun ScreenshotCard(item: ScreenshotEntity, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickable(
+                onClick = onClick,
+                role = androidx.compose.ui.semantics.Role.Button
+            )
     ) {
         Box(
             modifier = Modifier

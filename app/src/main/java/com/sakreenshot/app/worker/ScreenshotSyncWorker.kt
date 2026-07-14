@@ -23,11 +23,18 @@ class ScreenshotSyncWorker(
 
         try {
             val screenshots = mediaStoreHelper.queryScreenshots()
-            
+            val existingIds = dao.getAllMediaStoreIds().toSet()
+            val currentMediaStoreIds = screenshots.map { it.id }.toSet()
+
+            // 1. Delete stale records
+            val staleIds = existingIds - currentMediaStoreIds
+            if (staleIds.isNotEmpty()) {
+                dao.deleteByMediaStoreIds(staleIds.toList())
+            }
+
+            // 2. Enqueue processing for new screenshots
             for (item in screenshots) {
-                // Check if already indexed
-                val existing = dao.findByMediaStoreId(item.id)
-                if (existing != null) {
+                if (existingIds.contains(item.id)) {
                     continue // Skip already processed
                 }
 

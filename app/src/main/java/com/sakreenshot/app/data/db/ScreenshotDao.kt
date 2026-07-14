@@ -47,6 +47,9 @@ interface ScreenshotDao {
     @Query("SELECT * FROM screenshots WHERE mediaStoreId = :mediaStoreId LIMIT 1")
     suspend fun findByMediaStoreId(mediaStoreId: Long): ScreenshotEntity?
 
+    @Query("SELECT mediaStoreId FROM screenshots")
+    suspend fun getAllMediaStoreIds(): List<Long>
+
     @Query("SELECT * FROM screenshots WHERE capturedAt < :thresholdTime OR estimatedExpiry < :currentTime ORDER BY capturedAt ASC")
     suspend fun fetchCleanupCandidates(thresholdTime: Long, currentTime: Long): List<ScreenshotEntity>
 }
