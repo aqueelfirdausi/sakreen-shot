@@ -10,9 +10,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.sakreenshot.app.theme.AccentBronze
+import com.sakreenshot.app.theme.BeigeBackground
 import com.sakreenshot.app.theme.TextPrimary
 import com.sakreenshot.app.theme.TextSecondary
 import com.sakreenshot.app.worker.WorkManagerHelper
@@ -28,18 +31,26 @@ fun SettingsScreen(onBack: () -> Unit) {
     }
     
     val hasPermission = ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+    val versionString = remember {
+        try {
+            val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            "Version ${pInfo.versionName}"
+        } catch (e: Exception) {
+            "Version 1.0.0"
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings") },
+                title = { Text("Settings & Privacy", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold), color = TextPrimary) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = TextPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = BeigeBackground
                 )
             )
         }
@@ -48,14 +59,14 @@ fun SettingsScreen(onBack: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Column {
-                Text("Permissions", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-                Spacer(modifier = Modifier.height(8.dp))
+                Text("Storage Permission", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold), color = AccentBronze)
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Media Access: ${if (hasPermission) "Granted" else "Denied"}",
+                    text = "Media Access Status: ${if (hasPermission) "Granted" else "Denied"}",
                     style = MaterialTheme.typography.bodyLarge,
                     color = TextPrimary
                 )
@@ -64,29 +75,31 @@ fun SettingsScreen(onBack: () -> Unit) {
             HorizontalDivider()
 
             Column {
-                Text("Sync & Processing", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-                Spacer(modifier = Modifier.height(8.dp))
+                Text("Local Sync & Ingestion", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold), color = AccentBronze)
+                Spacer(modifier = Modifier.height(10.dp))
                 Button(
                     onClick = { WorkManagerHelper.scheduleSync(context) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = AccentBronze)
                 ) {
-                    Text("Run Screenshot Import")
+                    Text("Run Screenshot Ingestion", color = BeigeBackground)
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedButton(
-                    onClick = { /* In an MVP, running a sync handles retries automatically */ WorkManagerHelper.scheduleSync(context) },
+                    onClick = { WorkManagerHelper.scheduleSync(context) },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Retry Failed Items")
+                    Text("Retry Failed OCR Items", color = TextPrimary)
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "Background Import",
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.primary
+                    text = "Background Ingestion Limitation",
+                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                    color = TextPrimary
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Android may occasionally delay automatic screenshot detection to save battery. Any missed screenshots will be imported automatically the next time you open the app.",
+                    text = "Android OS or device battery saver settings may occasionally delay background detection. Any missed screenshots are reconciled automatically when you open Sakreen Shot.",
                     style = MaterialTheme.typography.bodySmall,
                     color = TextSecondary
                 )
@@ -95,10 +108,10 @@ fun SettingsScreen(onBack: () -> Unit) {
             HorizontalDivider()
 
             Column {
-                Text("Storage Sanity", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-                Spacer(modifier = Modifier.height(8.dp))
+                Text("Storage Sanity Policy", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold), color = AccentBronze)
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Cleanup suggests removing screenshots older than 30 days.",
+                    text = "Clean Cleanup tool identifies screenshots older than 30 days for user-confirmed deletion.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = TextPrimary
                 )
@@ -108,17 +121,17 @@ fun SettingsScreen(onBack: () -> Unit) {
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Your screenshots and extracted text remain on this device.",
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = "100% Local-First Privacy. Your screenshots and extracted text never leave this device.",
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
                     color = TextSecondary,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Version 1.0 (MVP)",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = TextSecondary,
+                    text = versionString,
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    color = AccentBronze,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )

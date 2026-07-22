@@ -2,13 +2,13 @@ package com.sakreenshot.app.ui.screens.cleanup
 
 import android.app.Activity
 import android.app.RecoverableSecurityException
-import android.content.ContentUris
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,7 +17,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -38,7 +40,10 @@ import coil3.request.crossfade
 import com.sakreenshot.app.SakreenShotApplication
 import com.sakreenshot.app.data.db.ScreenshotEntity
 import com.sakreenshot.app.data.repository.DataRepository
+import com.sakreenshot.app.theme.AccentBronze
+import com.sakreenshot.app.theme.BeigeBackground
 import com.sakreenshot.app.theme.BeigeSurfaceElevated
+import com.sakreenshot.app.theme.BorderBronze
 import com.sakreenshot.app.theme.ColorDelete
 import com.sakreenshot.app.theme.TextPrimary
 import com.sakreenshot.app.theme.TextSecondary
@@ -61,7 +66,6 @@ class CleanupViewModel(private val repository: DataRepository) : ViewModel() {
 
     private fun loadCandidates() {
         viewModelScope.launch {
-            // Find screenshots older than 30 days or categorized as UNSORTED
             val thirtyDaysAgo = System.currentTimeMillis() - (30L * 24 * 60 * 60 * 1000)
             val results = repository.fetchCleanupCandidates(thirtyDaysAgo, System.currentTimeMillis())
             _candidates.value = results
@@ -92,7 +96,6 @@ class CleanupViewModel(private val repository: DataRepository) : ViewModel() {
             val mediaStoreIds = entities.map { it.mediaStoreId }
             repository.deleteByMediaStoreIds(mediaStoreIds)
             
-            // Reload list and clear selection
             _selectedIds.value = emptySet()
             loadCandidates()
         }
@@ -158,10 +161,16 @@ fun CleanupScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (selectedIds.isEmpty()) "Cleanup" else "${selectedIds.size} Selected") },
+                title = {
+                    Text(
+                        text = if (selectedIds.isEmpty()) "Storage Cleanup" else "${selectedIds.size} Selected",
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        color = TextPrimary
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = TextPrimary)
                     }
                 },
                 actions = {
@@ -170,20 +179,24 @@ fun CleanupScreen(
                             if (selectedIds.size == candidates.size) viewModel.clearSelection()
                             else viewModel.selectAll()
                         }) {
-                            Text(if (selectedIds.size == candidates.size) "Deselect All" else "Select All", color = TextPrimary)
+                            Text(
+                                text = if (selectedIds.size == candidates.size) "Deselect All" else "Select All",
+                                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                                color = AccentBronze
+                            )
                         }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = BeigeBackground
                 )
             )
         },
         bottomBar = {
             if (selectedIds.isNotEmpty()) {
                 Surface(
-                    color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 8.dp,
+                    color = BeigeBackground,
+                    border = BorderStroke(1.dp, BorderBronze),
                     shadowElevation = 8.dp
                 ) {
                     Row(
@@ -195,9 +208,14 @@ fun CleanupScreen(
                         Button(
                             onClick = { triggerDelete() },
                             colors = ButtonDefaults.buttonColors(containerColor = ColorDelete),
+                            shape = RoundedCornerShape(12.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Delete ${selectedIds.size} Items")
+                            Text(
+                                text = "Delete ${selectedIds.size} Items",
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                color = BeigeBackground
+                            )
                         }
                     }
                 }
@@ -206,14 +224,20 @@ fun CleanupScreen(
     ) { padding ->
         if (candidates.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                Text("No old or unsorted screenshots to clean up!", color = TextSecondary, textAlign = TextAlign.Center)
+                Text(
+                    text = "No old or unsorted screenshots ready for cleanup.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = TextSecondary,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(32.dp)
+                )
             }
         } else {
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 100.dp),
+                columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxSize().padding(padding)
             ) {
                 items(candidates, key = { it.id }) { item ->
@@ -231,37 +255,46 @@ fun CleanupScreen(
 
 @Composable
 fun CleanupItemCard(item: ScreenshotEntity, isSelected: Boolean, onClick: () -> Unit) {
-    Box(
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = BeigeSurfaceElevated),
+        border = BorderStroke(1.dp, if (isSelected) ColorDelete else BorderBronze),
         modifier = Modifier
-            .aspectRatio(0.56f)
-            .clip(RoundedCornerShape(8.dp))
-            .background(if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else BeigeSurfaceElevated)
-            .clickable(onClick = onClick)
+            .fillMaxWidth()
+            .clickable(onClick = onClick, role = Role.Button)
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(Uri.parse(item.contentUri))
-                .crossfade(true)
-                .build(),
-            contentDescription = "Screenshot",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-        
-        if (isSelected) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(ColorDelete.copy(alpha = 0.4f))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(140.dp)
+                .clip(RoundedCornerShape(12.dp))
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(Uri.parse(item.contentUri))
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Screenshot candidate",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
-            Icon(
-                Icons.Default.CheckCircle,
-                contentDescription = "Selected",
-                tint = MaterialTheme.colorScheme.surface,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(8.dp)
-            )
+            
+            if (isSelected) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(ColorDelete.copy(alpha = 0.35f))
+                )
+                Icon(
+                    Icons.Default.CheckCircle,
+                    contentDescription = "Selected",
+                    tint = BeigeBackground,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                        .size(24.dp)
+                )
+            }
         }
     }
 }

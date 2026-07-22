@@ -10,7 +10,10 @@ class DataRepository(private val dao: ScreenshotDao) {
 
     fun observeCategoryCounts() = dao.observeCategoryCounts()
 
-    fun searchExtractedText(query: String) = dao.searchExtractedText("*$query*") // FTS syntax
+    fun searchExtractedText(query: String): Flow<List<ScreenshotEntity>> {
+        val trimmed = query.trim()
+        return if (trimmed.isEmpty()) kotlinx.coroutines.flow.flowOf(emptyList()) else dao.searchExtractedText(trimmed)
+    }
 
     fun observeByCategory(category: String) = dao.observeByCategory(category)
 

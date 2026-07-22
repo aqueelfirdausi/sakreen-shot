@@ -16,10 +16,12 @@ interface ScreenshotDao {
     fun observeCategoryCounts(): Flow<List<CategoryCount>>
 
     @Query("""
-        SELECT s.* FROM screenshots s
-        JOIN screenshots_fts fts ON s.id = fts.rowid
-        WHERE fts.screenshots_fts MATCH :query
-        ORDER BY s.capturedAt DESC
+        SELECT * FROM screenshots 
+        WHERE extractedText LIKE '%' || :query || '%' 
+           OR normalizedText LIKE '%' || :query || '%'
+           OR displayName LIKE '%' || :query || '%'
+           OR primaryCategory LIKE '%' || :query || '%'
+        ORDER BY capturedAt DESC
     """)
     fun searchExtractedText(query: String): Flow<List<ScreenshotEntity>>
 
@@ -50,7 +52,7 @@ interface ScreenshotDao {
     @Query("SELECT mediaStoreId FROM screenshots")
     suspend fun getAllMediaStoreIds(): List<Long>
 
-    @Query("SELECT * FROM screenshots WHERE capturedAt < :thresholdTime OR estimatedExpiry < :currentTime ORDER BY capturedAt ASC")
+    @Query("SELECT * FROM screenshots WHERE capturedAt < :thresholdTime OR estimatedExpiry < :currentTime OR primaryCategory = 'UNSORTED' ORDER BY capturedAt ASC")
     suspend fun fetchCleanupCandidates(thresholdTime: Long, currentTime: Long): List<ScreenshotEntity>
 }
 
