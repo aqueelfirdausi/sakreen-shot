@@ -27,3 +27,6 @@ signing.properties
 *.db-shm
 *.db
 *.sqlite
+
+# Scratch files and temporary dumps
+/scratch/
