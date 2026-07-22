@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Sakreen Shot</title>
+    <style>
+        :root {
+            --bg-color: #F6F2EB;
+            --surface-color: #FAF7F2;
+            --text-primary: #2A2421;
+            --text-secondary: #5C524A;
+            --accent-bronze: #8C6D46;
+            --border-color: #E3DAD0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            padding: 24px 16px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px 24px;
+            box-shadow: 0 4px 12px rgba(42, 36, 33, 0.04);
+        }
+
+        header {
+            border-bottom: 2px solid var(--accent-bronze);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            color: var(--text-primary);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        h2 {
+            color: var(--accent-bronze);
+            font-size: 1.3rem;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        p, li {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        strong {
+            color: var(--text-primary);
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: #EBE4D8;
+            color: var(--accent-bronze);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .contact-box {
+            background-color: var(--bg-color);
+            border: 1px dashed var(--accent-bronze);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+        }
+
+        footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Sakreen Shot — Privacy Policy</h1>
+        <div class="meta">Effective Date: July 23, 2026 | Last Updated: July 23, 2026</div>
+        <span class="badge">100% Offline &amp; Local-First Architecture</span>
+    </header>
+
+    <main>
+        <p>Sakreen Shot ("we", "our", or "us") is committed to total user privacy. Sakreen Shot is designed from the ground up as a <strong>strictly local-first, offline screenshot organizer</strong> for Pakistani retail, wholesale, small business, and personal workflows.</p>
+
+        <h2>1. 100% Local-First Architecture</h2>
+        <ul>
+            <li><strong>Screenshots Remain On Your Device:</strong> All screenshots imported into or managed by Sakreen Shot stay exclusively on your local storage.</li>
+            <li><strong>On-Device OCR Processing:</strong> Optical Character Recognition (OCR) is performed entirely on your device using Google ML Kit on-device text recognition. Text from receipts, bills, CNICs, chats, or notes is never transmitted to any external server.</li>
+            <li><strong>No Cloud Uploads:</strong> Sakreen Shot has no cloud servers, no web API endpoints, and no remote data sync mechanism.</li>
+            <li><strong>No Internet Permission:</strong> The application does not request or possess the Android <code>INTERNET</code> permission (<code>android.permission.INTERNET</code>). The app cannot physically communicate with the internet or external servers.</li>
+        </ul>
+
+        <h2>2. Data Collection and Usage</h2>
+        <ul>
+            <li><strong>No User Accounts:</strong> You do not need to register, create an account, log in, or provide any personal information to use Sakreen Shot.</li>
+            <li><strong>No Data Collection:</strong> We do not collect, harvest, aggregate, or process any personal data, usage data, or telemetry.</li>
+            <li><strong>No Data Sale:</strong> We do not sell, rent, trade, or share any user data with third parties or advertising networks.</li>
+            <li><strong>No Analytics or Tracking:</strong> Sakreen Shot contains zero analytics SDKs, zero telemetry tools, and zero tracking pixels.</li>
+            <li><strong>No Advertising:</strong> Sakreen Shot is 100% ad-free and contains no advertising SDKs.</li>
+        </ul>
+
+        <h2>3. Storage &amp; Permissions</h2>
+        <ul>
+            <li><strong>Image Access Permission:</strong> Sakreen Shot requests standard Android storage read access (<code>READ_EXTERNAL_STORAGE</code> on Android 12 and below, or <code>READ_MEDIA_IMAGES</code> on Android 13+) solely to scan and index local screenshot media files.</li>
+            <li><strong>Local Database &amp; Metadata:</strong> OCR text indexes, tags, category assignments, and pinned items are stored locally in an isolated SQLite database within the app's internal sandbox directory.</li>
+            <li><strong>Auto-Backup Disabled:</strong> Android Cloud Auto-Backup is explicitly disabled (<code>allowBackup="false"</code>) so that your local OCR database and index are never uploaded to Google Drive or cloud backups.</li>
+            <li><strong>App Uninstall Effect:</strong> Uninstalling Sakreen Shot completely deletes the app's internal database and local OCR index. Original screenshot media files in your device gallery remain untouched unless explicitly deleted by you.</li>
+        </ul>
+
+        <h2>4. User-Controlled Deletion</h2>
+        <ul>
+            <li><strong>No Automatic Media Deletion:</strong> Sakreen Shot never deletes your screenshots automatically.</li>
+            <li><strong>Android System Confirmation Required:</strong> All screenshot deletions initiated within Sakreen Shot require your explicit confirmation through Android's native Scoped Storage dialog (<code>MediaStore.createDeleteRequest()</code>).</li>
+            <li><strong>User Authority:</strong> You retain total control over which screenshots are retained or deleted.</li>
+        </ul>
+
+        <h2>5. Background Ingestion &amp; System Behavior</h2>
+        <ul>
+            <li><strong>Local Background Sync:</strong> Sakreen Shot uses Android WorkManager to periodically detect newly taken screenshots locally on your device.</li>
+            <li><strong>OS Restrictions:</strong> Background sync operates within standard Android system constraints. System power-saving settings or OEM background optimizations may affect sync timing; missed screenshots are automatically reconciled whenever you open the app.</li>
+        </ul>
+
+        <div class="contact-box">
+            <h2>6. Contact Information</h2>
+            <p>If you have questions regarding this Privacy Policy or Sakreen Shot's privacy architecture, please contact:</p>
+            <p><strong>Contact Email / Address:</strong> <code>[Insert Official Contact Address / Email]</code></p>
+            <p><strong>App Developer:</strong> Sakreen Shot Team</p>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 Sakreen Shot. 100% Local-First Privacy Protection.
+    </footer>
+</div>
+
+</body>
+</html>
