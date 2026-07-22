@@ -1,3 +1,5 @@
+import java.io.File
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.compose.compiler)
@@ -13,13 +15,33 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
+    }
+
+    signingConfigs {
+        create("release") {
+            val keystorePath = System.getenv("SAKREEN_KEYSTORE_PATH") ?: project.findProperty("SAKREEN_KEYSTORE_PATH")?.toString()
+            val keystorePassword = System.getenv("SAKREEN_KEYSTORE_PASSWORD") ?: project.findProperty("SAKREEN_KEYSTORE_PASSWORD")?.toString()
+            val keyAlias = System.getenv("SAKREEN_KEY_ALIAS") ?: project.findProperty("SAKREEN_KEY_ALIAS")?.toString()
+            val keyPassword = System.getenv("SAKREEN_KEY_PASSWORD") ?: project.findProperty("SAKREEN_KEY_PASSWORD")?.toString()
+
+            if (!keystorePath.isNullOrBlank() && File(keystorePath).exists()) {
+                storeFile = File(keystorePath)
+                storePassword = keystorePassword
+                this.keyAlias = keyAlias
+                this.keyPassword = keyPassword
+            }
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            val releaseSigningConfig = signingConfigs.getByName("release")
+            if (releaseSigningConfig.storeFile != null && releaseSigningConfig.storeFile!!.exists()) {
+                signingConfig = releaseSigningConfig
+            }
         }
     }
     compileOptions {

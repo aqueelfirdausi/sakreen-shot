@@ -1,6 +1,9 @@
 *.iml
 .gradle
 /local.properties
+local.properties
+keystore.properties
+signing.properties
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -12,4 +15,15 @@
 /captures
 .externalNativeBuild
 .cxx
-local.properties
+
+# Release & signing artifacts
+*.apk
+*.aab
+*.jks
+*.keystore
+
+# Database WAL / SHM / dumps
+*.db-wal
+*.db-shm
+*.db
+*.sqlite

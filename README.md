@@ -10,9 +10,10 @@ Sakreen Shot is a private, offline-first Android screenshot organizer designed f
 - **Secure Deletion**: Uses the official Android MediaStore deletion requests to permanently remove screenshots securely and safely.
 
 ## Android Requirements
-- Minimum SDK: API 26 (Android 8.0)
-- Target SDK: API 34 (Android 14)
-- Permissions: Storage access (`READ_EXTERNAL_STORAGE` on API 31 and below, `READ_MEDIA_IMAGES` on API 33+)
+- Minimum SDK: API 24 (Android 7.0)
+- Target SDK: API 36 (Android 15+)
+- Compile SDK: API 36
+- Permissions: Storage access (`READ_EXTERNAL_STORAGE` on API 32 and below, `READ_MEDIA_IMAGES` on API 33+)
 
 ## Development Setup
 This project uses standard Android build tools and Jetpack Compose.
@@ -28,6 +29,35 @@ This project uses standard Android build tools and Jetpack Compose.
 
 # Build Debug APK
 ./gradlew assembleDebug
+```
+
+## Production Release Signing Instructions (For Owner)
+To generate a signed release AAB/APK locally for Google Play closed testing:
+
+1. **Generate Production Keystore (One-Time Command)**:
+```bash
+keytool -genkey -v -keystore sakreen-release.jks -alias sakreen_release_key -keyalg RSA -keysize 2048 -validity 10000
+```
+> **IMPORTANT**: Keep `sakreen-release.jks` and its passwords in a secure location (e.g. 1Password / Bitwarden). Do NOT commit `.jks` files or passwords to Git.
+
+2. **Configure Environment Variables**:
+```powershell
+$env:SAKREEN_KEYSTORE_PATH="C:\path\to\sakreen-release.jks"
+$env:SAKREEN_KEYSTORE_PASSWORD="YourKeystorePassword"
+$env:SAKREEN_KEY_ALIAS="sakreen_release_key"
+$env:SAKREEN_KEY_PASSWORD="YourKeyPassword"
+```
+Or create a local `keystore.properties` / `local.properties` (git-ignored) with:
+```properties
+SAKREEN_KEYSTORE_PATH=C:/path/to/sakreen-release.jks
+SAKREEN_KEYSTORE_PASSWORD=YourKeystorePassword
+SAKREEN_KEY_ALIAS=sakreen_release_key
+SAKREEN_KEY_PASSWORD=YourKeyPassword
+```
+
+3. **Build Signed Release Bundle**:
+```bash
+./gradlew bundleRelease
 ```
 
 ## Known Limitations & Ingestion Behavior
